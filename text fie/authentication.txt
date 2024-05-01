@@ -1,0 +1,99 @@
+please create login page, sign up page, controller, model and database.
+
+then,
+
+1. you should got to your model. 
+
+	//\\ like Admin.php
+		
+		-->> use Illuminate\Foundation\Auth\User as Authenticatable;
+		-->> class admin extends Authenticatable  ||||   'admin' which is a model name 
+				{
+    					use HasFactory;
+
+    					protected $fillable = [
+        						'name',
+        						'email',
+        						'password',
+    							];
+    					protected $hidden = [
+       		 				'password',
+        						'remember_token',
+    							];
+				}
+
+2. you should go to your config folder (auth.php)
+
+	//\\ 'guards' => 
+
+		-->>  'admin' => [  ||| this is good practice for me that //\\ guard name ==== model name
+            			'driver' => 'session',
+           			 'provider' => 'admins',   ||| 'admins' which is database name
+        				],
+
+	//\\ 'providers' =>
+		
+		-->>  'admins' => [     ||| 'admins' which is database name
+           			 'driver' => 'eloquent',
+            			'model' => App\Models\Admin::class,   ||| 'Admin' which is model name
+        				],
+
+3. now create a middleware using following this command line 
+		
+		-->> php artisan make:middleware Admin ||||| 'Admin' which is a middleware name and similar to model name
+	
+	//\\ then Admin.php
+			
+		use Auth;
+
+		-->> if(!Auth::guard('admin')->check()){   |||| 'admin' which is a model name
+            			return redirect('/admin/login');   |||| '/admin/login' which is the url of login blade file
+
+        			}
+
+		-->> return $next($request);
+
+6. Http>Kernel.php 
+	
+		-->>  'admin' => \App\Http\Middleware\Admin::class, |||| 'admin' which is a middleware name
+
+5. now create a route for loging 
+
+		->> Route::post('/admin-login', [LoginController::class, 'adminLogin'])->name('admin.login'); |||| 'admin.login' => login blade file => action="{{ url ('admin-login') }}"
+
+6. You should go to now LoginController 
+		
+		-->> use Auth;
+		-->use Session;
+
+		-->> public function adminLogin(Request $request){
+        			$request->validate([
+            				'email'=>'required',
+            				'password'=>'required',
+        					]);
+
+        		if(Auth::guard('admin')->attempt(['email'=>$request->email,'password'=>$request->password])){  |||| 'admin' => Guard name //\\ config->auth.php
+           			 return redirect('/admin/dashboard');  |||| dashboard route
+        			}
+			else{
+            				Session::flash('err','invalid pass');
+            					return redirect()->back();
+        				}
+       
+    			}
+
+7. now create a route for dashboard and Logut/etc.......
+
+		-->>Route::group(['prefix'=>'admin','middleware'=>'admin'], function(){
+    			Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
+    			Route::get('/logout', [loginController::class, 'logout'])->name('home');
+			});
+
+
+
+8.     				public function logout(){
+        					Auth::guard('signup')->logout();   ||||| 'signup' => guard name
+        						return redirect('/');
+    						}
+
+9. 				    <a href="{{url('user/logout')}}">logout</a>

@@ -1,0 +1,2 @@
+1. user>index.php
+761-> <h6 class="name">{{$product->subCategory->subcatname}}</h6>

@@ -1,0 +1,78 @@
+npm install -g npm@latest
+
+npm run build
+
+npm update vite
+
+npm install --force
+
+npm run dev --force
+
+php artisan serve
+
+
+
+<div class="cart_qty qty-box">
+                                                                <div class="input-group">
+                                                                    <button type="button" class="qty-left-minus" data-product_id="{{$product->id}}"
+                                                                         data-field="">
+                                                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                                                    </button>
+                                                                    <input class="form-control input-number qty-input"
+                                                                        type="text" name="quantity" id="quantity_{{$product->id}}" value="1">
+                                                                    <button type="button" class="qty-right-plus" data-product_id="{{$product->id}}"
+                                                                         data-field="">
+                                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+
+$(".qty-left-minus").on("click", function () {
+                
+                let product_id=$(this).data('product_id');
+                updateQuantity( product_id);
+            });
+
+            $(".qty-right-plus").on("click", function () {
+                let product_id=$(this).data('product_id');
+                updateQuantity(product_id);
+            });
+
+            function updateQuantity(product_id) {
+
+                var productId = {{$product->id}};
+                var inputFieldId = 'quantity_' + productId;
+                var newValue = parseInt($("#" + inputFieldId).val());
+
+                // Update the input field immediately
+                $("#quantity").val(newValue);
+                // let product_id=$(this).data('product_id');
+
+                // let product_id=$("#product_id").val();
+                
+                console.log(newValue);
+                console.log(product_id);
+
+
+                
+                // Make AJAX call to update quantity in the database
+                $.ajax({
+                    url: "{{route('update.quantity')}}",
+                    type: "POST",
+                    data: { 
+                        _token: @json(csrf_token()),
+                        quantity: newValue,
+                        product_id:product_id
+                    },
+                    headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        console.log(response); // Log the response for debugging
+                    },
+                    error: function (error) {
+                        console.error("Error updating quantity: ", error);
+                    }
+                });
+            }

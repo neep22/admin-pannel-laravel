@@ -1,0 +1,19 @@
+$(document).ready(function(){
+
+        $(document).on('click', '.getCatId', function(event){
+            event.preventDefault();
+            let id=$('#cat_id').val();
+            console.log(id);
+      
+            $.ajax({
+                url:"{{route('cat.id')}}",
+                method:"post",
+                data:{
+                    id:id,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    });

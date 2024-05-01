@@ -1,0 +1,77 @@
+//\\ by using url 
+
+1. in blade
+
+	-->> <a href="{{url('/admin/delete-product',['id' => $product->id])}}">
+                              <i class="ri-delete-bin-line"></i>
+                       </a>
+
+
+2. web.php
+
+	-->> Route::get('/admin/delete-product/{id}', [DeleteProductController::class, 'deleteProduct']);
+2. in controller 
+
+	-->> function deleteProduct($id){
+
+        		Product::find($id)->delete();
+
+        		// Product::where('id', $id)->delete();
+
+        		return redirect()->back();
+        		// return response()->json([
+        		//     'status'=>'product Deleted'
+
+        	// ]);
+    }
+
+//\\ by using ajax
+
+1. in blade file
+	
+	-->>	<a href="{{url('/admin/delete-cat',$data->id)}}" 
+                                            class="delete_cat"
+                                             data-id="{{$data->id}}">
+                                              <i class="ri-delete-bin-line"></i>
+                                </a>
+
+
+2. in js file
+
+	-->>	$(document).ready(function(){
+        			$(document).on('click', '.delete_cat', function(event){
+            			event.preventDefault();
+            			let id=$(this).data('id');
+
+            			console.log(id);
+
+            			if (confirm("Are you sure to delete product????")) {
+                			$.ajax({
+                    				url: "{{ route ('delete.cat') }}",
+                    				method: "post",
+                    				data: {
+                        					id: id,
+                    				},
+                    				headers: {
+                        					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    				},
+                    				success: function (res) {
+                        					if (res.status = 'success') {
+                            					$('.table').load(location.href + ' .table');
+                        				}
+                    			},
+                		});
+            		}
+        	});
+    });
+
+3. web.php
+
+		-->> Route::post('/delete-cat', [DeleteCategoryController::class, 'deleteCat'])->name('delete.cat'); //via ajax
+
+4. in controller 
+
+	-->>	public function deleteCat(Request $request){
+        			AddCategory::find($request->id)->delete();
+        			// return redirect()->back();
+    		}

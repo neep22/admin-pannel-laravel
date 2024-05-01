@@ -1,0 +1,24 @@
+@foreach($subCategories as $subcategory)
+                                                        <option value="{{$subcategory->id}}">{{$subcategory->subcatname}}</option>
+                                                        @endforeach
+
+
+
+1Authentication -> //\\ Passport (for API)
+		//\\ Breeze (for Blade)
+2. custom middleware
+3. custom helper
+4. custom facade
+5. database indexing
+6. API
+7. Laravel Jobs event
+8. Email Varification/Notification
+9.CSV file send into database
+10. payemetn gateway
+
+
+    $product = Product::with('subCategory')->where('id', $id)->get();
+    $categories = AddCategory::all();
+    $subCategories = AddSubCategory::all();
+    $onlyListedSubCategory = Product::with('category')->get();
+    return view("Admin.Product.edit.editProduct", ['product'=>$product, 'categories'=>$categories, 'subCategories'=>$subCategories, 'onlyListedSubCategory'=>$onlyListedSubCategory]);

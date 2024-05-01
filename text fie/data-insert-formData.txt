@@ -1,0 +1,73 @@
+data insert with imgae
+
+1. in blade file 
+	
+	-->> 	<form action="{{route('add.product')}}" method="post" class="theme-form theme-form-2 mega-form" enctype="multipart/form-data" id="productForm">
+		@csrf 
+
+
+			<button type="submit" class="btn btn-primary add_product">Save product</button>
+		</form>
+
+2. in js file (AJAX) 
+
+	    	$(document).ready(function(){
+        			$(document).on('submit', '#userProfileUpdateForm', function(event){
+
+            				event.preventDefault();
+
+            				let formData = new FormData(this);
+
+            				$.ajax({
+                				url:"{{route('update.userProfile')}}",
+               				 	method:'post',
+                				data: formData,
+                				cache:false,
+                				contentType: false,
+                				processData: false,
+            				});
+        			});
+    		});
+3. web.php 
+
+	-->> Route::post('/user-profile-update', [UserSignupController::class, 'userProfileUpdate'])->name('update.userProfile');
+
+4.controller 
+
+	-->>	function addProduct(Request $request){
+        			$request->validate([
+             			'pname'=>'required',
+             			'cat_id'=>'required',
+            			'subcat_id'=>'required',
+
+            		 	'pimage.*' => 'mimes:jpg,png,jpeg,gif,svg'
+        		]);
+
+
+        		//image
+        		$imageName = '';
+        		if($pimage = $request->file('pimage')){
+         			$imageName = time().'-'.uniqid().'.'.$pimage->getClientOriginalExtension();
+         			$pimage->move('Admin/images', $imageName);
+        		}
+
+
+        $product=new Product();
+        $product->pname=$request->pname;
+        $product->cat_id=$request->cat_id;
+        $product->subcat_id=$request->subcat_id;
+        $product->pimage= $imageName;
+        $product->save();
+
+        // return response()->json([
+        //     'status'=>'success'
+        // ]);
+
+        Toastr::success('Porduct Added Successfully', 
+        'Succes', [
+                "positionClass" => "toast-top-right",
+                "closeButton" => "true",
+                "progressBar" => "true",
+        ]);
+        return redirect()->back();
+    }

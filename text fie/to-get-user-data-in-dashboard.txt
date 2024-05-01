@@ -1,0 +1,21 @@
+1. dashboard controller 
+	
+	-->>    
+
+		$admin = Auth::guard('signup')->user(); ||| 'signup' => guard name; 
+						'user()' => laravel builtin method
+
+    		$id = $admin->id;
+    		$name = $admin->name;
+    		$email = $admin->email;
+    		$password = $admin->password;
+
+    		// Pass the user information to the view
+    		return view('dashboard', compact('id', 'name', 'email', 'password'));
+
+2. dashboard.blade.php
+	
+	    	<p>{{$name}}</p>
+   		<p>{{$email}}</p>
+   		<p>{{$id}}</p>
+  		<p>{{$password}}</p>

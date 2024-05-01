@@ -1,0 +1,86 @@
+    
+1. in blade file. 
+	
+	-->><div class="input-box pt-3">
+                                <form class="row g-4" action="" method="post" enctype="multipart/form-data" id="userProfileUpdateForm">
+                               @csrf
+                                	<input type="text" class="form-control" id="up_id" name="up_id" value="{{$id}}">   |||| $id=>from @foreach
+                                                    <div class="col-12"> 
+                                                        <div class="">
+                                                            <input type="file" class="form-control" name="userimage" id="userimage">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-floating theme-form-floating">
+                                                            <input type="text" class="form-control" name="address" id="address" placeholder="Address">
+                                                            <label for="address">Address</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="form-floating theme-form-floating">
+                                                            <select name="gender" id="gender" class="form-control">
+                                                                <option value="">Select your gender</option>
+                                                                <option value="Male">Male</option>
+                                                                <option value="Female">Female</option>
+                                                                <option value="Third gender">Third gender</option>
+                                                            </select>
+                                                            <label for="birthday">Gender</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <button type="submit" class="btn btn-animation w-100 form_data">Submit</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+2. in js 
+
+	-->>     $(document).ready(function(){
+        			$(document).on('submit', '#userProfileUpdateForm', function(event){
+
+            			event.preventDefault();
+
+            			let formData = new FormData(this);
+
+            			$.ajax({
+                			url:"{{route('update.userProfile')}}",
+                			method:'post',
+                			data: formData,
+                			cache:false,
+                			contentType: false,
+                			processData: false,
+            				});
+        			});
+    		});
+
+3. web.php
+
+	-->> Route::post('/user-profile-update', [UserSignupController::class, 'userProfileUpdate'])->name('update.userProfile');
+
+1. in controller 
+
+
+	-->> public function userProfileUpdate(Request $request){
+        		$request->validate([
+            		'userimage' => 'required',
+            		'phonenumber' => 'required'
+        	]);
+
+ 
+
+        		$imageName = '';
+        		if($userimage = $request->file('userimage')){
+         		$imageName = time().'-'.uniqid().'.'.$userimage->getClientOriginalExtension();
+         		$userimage->move('user/images/user', $imageName);
+        		}
+
+        	User::where('id', $request->up_id)->update([ 
+           	'userimage'=> $imageName,
+            	'phonenumber'=> $request->phonenumber,
+            	'birthday'=> $request->birthday,
+           	 'address'=> $request->address,
+        	]);
+
+        	return redirect()->back();
+
+    }

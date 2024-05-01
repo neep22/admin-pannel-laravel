@@ -1,0 +1,17 @@
+1. in controller file
+
+	//\\	use Brian2694\Toastr\Facades\Toastr;
+
+        		Toastr::success('Category Added Successfully', 
+        			'Title', [
+            				"positionClass" => "toast-top-right",
+            				"closeButton" => "true",
+            				"progressBar" => "true",
+        			]);
+
+2. in blade file
+
+	//\\	{!! Toastr::message() !!}
+
+
+ <a href="{{url('/admin/delete-product',['id' => $product->id])}}" 

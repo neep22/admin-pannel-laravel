@@ -1,0 +1,39 @@
+1. create a middleware
+	
+	->> php artisan make:middleware DisableBackBtn
+
+2. go to created middleware file 
+
+ 	--> and add     
+	
+		public function handle(Request $request, Closure $next): Response
+    			{
+
+        				$response = $next($request);
+
+        				$response->headers->set('Cache-Control', 'nocache, no-store, max-age=0,  must-revalidate');
+        				$response->headers->set('Pragma', 'no-cache');
+        				$response->headers->set('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT');
+
+        				return $response;
+    			}
+
+3. go to karnel.php
+
+	-->> and add
+	
+		'disable_back_btn' => \App\Http\Middleware\DisableBackBtn::class,
+
+4. go to web.php
+
+	-->> Route::group(['middleware' => 'disable_back_btn'], function(){
+		
+		//\\ Here is the route of dashboard after clicking the log in buttton.
+		
+    		Route::group(['prefix'=>'user','middleware'=>'signup'], function(){
+
+        		Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('user.dashboard');
+        		Route::get('/logout', [loginController::class, 'logout'])->name('home');
+
+    		});
+	});

@@ -1,0 +1,9 @@
+php artisan make:migration add_is_active_column_into_users --table=users
+
+$table->string('catimage')->after('catname');
+
+
+    function product(){
+
+        return $this->belongsTo(Product::class);
+    }

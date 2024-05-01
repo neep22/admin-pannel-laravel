@@ -1,0 +1,34 @@
+1. in Ajax where inserted data in database
+
+	->> success: function(response){
+                    if(response.status = 'succes'){
+                        $('.view-product').load(location.href + ' .view-product'); //\\____view-product=>passed in the blade file where product will view 
+                    }
+                }
+
+2. in blade file=> data get
+
+	-->>  <ul class="view-product cart-list">
+                         @foreach($order as $singleOrder)
+                                 <li class="product-box-contain">
+                                         <div class="drop-cart">
+                                                <a href="product-left-thumbnail.html" class="drop-image">
+                                                	<img src="{{asset('Admin/images/'.$singleOrder->product->pimage)}}"
+                                                                    class="blur-up lazyload" alt="">
+                                          	</a>
+
+                                           	<div class="drop-contain">
+                                                   	 <a href="product-left-thumbnail.html">
+                                                     		<h5>{{$singleOrder->product->pname}}</h5>
+                                            		</a>
+                                                     	<h6><span>{{$singleOrder->quantity}} x</span>{{$singleOrder->price}}</h6>
+                                                      	<button class="close-button close_button">
+                                     			<i class="fa-solid fa-xmark"></i>
+                                                      	</button>
+                                             	</div>
+                                           </div>
+                                    </li>
+                             @endforeach
+                          </ul>
+
+Note: data insert and data get in same blade file

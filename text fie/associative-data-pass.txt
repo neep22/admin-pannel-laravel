@@ -1,0 +1,34 @@
+1. one way.       
+
+	-->> function addNewProduct(Request $request){
+        		$categories = AddCategory::all();
+        		return view ("Admin.Product.addnewproduct", ["categories"=>$categories]);
+    	}
+
+2. another way
+
+    	-->> public function getsubcategory(Request $request){
+        		$getsubcat['subcategorys'] =AddSubCategory::where('addcategory_id',$request->cat_id)->get(['subcatname','id']);
+        		// $getsubcat['subcategorys'] =AddSubCategory::where('addcategory_id',$request->cat_id)->get();
+        		return response()->json($getsubcat);
+    	}
+
+
+		||||| -->> $getsubcat['subcategorys'] $getsubcat['subcategorys']: 
+		
+			This initializes an associative array named $getsubcat with a key named 'subcategorys'. 
+			This key will hold the results of the database query.
+
+		||||| -->> ->get(['subcatname', 'id']): This retrieves the records from the database that match the 
+			condition specified in the where clause. The get() method fetches the records from the database. 
+			['subcatname', 'id'] specifies the columns to retrieve from the database. In this case, 
+			it will retrieve the subcatname and id columns only.
+
+
+		                success:function(response){
+                   		 	console.log(response);
+                    			$('#subcat_id').html('<option value="">Select Category</option>');
+                   			$.each(response.subcategorys,function(index, val){
+                    			$('#subcat_id').append('<option value="'+val.id+'"> '+val.subcatname+' </option>');
+                    			});
+                		}

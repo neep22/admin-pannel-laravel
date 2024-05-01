@@ -1,0 +1,22 @@
+1. in controller
+	//\\            Session::flash('msg', 'Product Deleted Successfully');
+       		return redirect()->back();
+
+2. in desniated blade file
+	//\\	<div class="successMessage mb-4 text-danger" style="text-align: center">
+                            		@if(Session::has('msg'))
+                                		<h2 class="text-success">{{Session::get('msg')}}</h2>
+                            		@endif
+                        	</div>
+
+3. to set time out. please create a js file and inlcude this in blade file
+	//\\	$("document").ready(function(){
+    			setTimeout(function(){
+        			$("div.successMessage").remove();
+    		}, 3000 ); 
+
+	});
+
+
+
+

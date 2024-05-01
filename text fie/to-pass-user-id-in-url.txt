@@ -1,0 +1,25 @@
+1. Login controller 
+
+	-->> $user = Auth::guard('signup)->user(); |||| 'signup'=>guard name.
+
+
+	//by using ROUTE
+	return redirect()->route( 'user.dashboard', [' id' => $user->id ]); |||| 'user' = > rout prefix.
+
+
+	//by using URL
+	return redirect(url('/user/user-dashboard', ['id'=> $userId->id])); 
+
+	//|\\ normla dashboard return
+		return redirect('/user/dashboard');
+
+2. Web.php
+
+	-->> Route::group(['middleware' => 'disable_back_btn'], function(){
+    		Route::group(['prefix'=>'user','middleware'=>'signup'], function(){
+        		Route::get('/dashboard/{id}', [DashboardController::class, 'dashboard'])->name('user.dashboard');
+        		Route::get('/logout', [loginController::class, 'logout'])->name('home');
+    		});
+	});
+
+

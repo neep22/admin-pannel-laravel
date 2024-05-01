@@ -1,0 +1,197 @@
+1. return in a working page
+
+	return redirect()->back();
+
+2. for only Table and searching
+
+	$('.table').load(location.href + ' .table');
+	
+
+
+3. for editing to get data in blade file 
+	
+	#### One Way (id in url)
+
+	|||| in blade file (anchor tag)/ product/categoryList
+	-->> <a href="{{url('/admin/edit-cat-sub', $datas->id)}}" 
+	
+
+
+	|||| in web.php
+
+	-->> Route::get('/edit-cat-sub/{id}', [EditCatController::class, 'editCatSub']);
+
+
+
+	|||| in controlller file/EditController
+
+	-->> function editCatSub($id){
+       	 	$subCategories = AddSubCategory::find($id);    //// \\\\   with and where. Ex: # $product = Product::with('subCategory')->where('id', $id)->get();
+        		return view ("Admin.Category.edit_cat_sub", ['subCategories'=>$subCategories]);
+    	}
+
+	||||| in desnitaed blade file
+	 
+	-->> <select name="catname" id="catname">
+                	<option value="">Select Parent Category</option>
+                                 <option value="" >{{$subCategories->category->catname}}</option>                                              
+                 </select>
+
+	<input class="form-control" value="{{$subCategories->subcatname}}" name="subcatname" id="subcatname" type="text"
+                 placeholder="Category Name">
+
+
+	<!-- <button type="submit" class="btn btn-primary add_sub_category">Save</button> -->
+
+
+
+	#### Another Way (for modal)
+
+	||||  in blade file (anchor tag)/ product/categoryList
+
+	<a href="" 
+                      class="upCatForm" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#editCatModal"
+                      data-catname="{{ $data->catname }}"
+                      data-id="{{ $data->id }}">
+                      <i class="ri-pencil-line"></i>
+                   </a>
+
+	||||   In Js File
+
+	    //Show Subcategory Information in Modal
+
+	   $(document).ready(function(){
+                       	$(document).on('click', '.upCatForm', function(event){
+                       	event.preventDefault();
+                       	let id=$(this).data('id');
+                       	let catname=$(this).data('catname');
+                      	$('#up_id').val(id); ////\\\\\  to edit a specific elements of id. there is an input field in modal to cathch single id for passing in ajax as a variable to server 
+                      	$('#catname').val(catname);
+                      	console.log(id);
+                      	console.log(catname);
+        	      	});
+
+
+
+	 	// Update Subcategory Information
+                 $(document).on('click', '.update_category', function(event){
+                  	event.preventDefault();
+                  	let up_id = $('#up_id').val(); 
+                  	let catname = $('#catname').val();
+
+                $.ajax({
+		url:"{{route('update.cat')}}",
+                	method:"post",
+                	data:{
+                    	up_id:up_id,
+                    	catname:catname
+               		},
+                	headers: {
+                    		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                	},
+                	success: function (res) {
+                    	// $('.updateMsg').append('<span class="text-success">Update Data Insert</span>')
+                    	if (res.status = 'success') {
+                        	$('#editCatModal').modal('hide');
+                        	$('#updateProductForm')[0].reset();
+                        	$('.table').load(location.href + ' .table');
+
+                        	Command: toastr["success"]("Product Updated", "success")
+                        	toastr.options = {
+                            	"closeButton": true,
+                            	"debug": false,
+                            	"newestOnTop": false,
+                            	"progressBar": true,
+                            	"positionClass": "toast-top-right",
+                            	"preventDuplicates": false,
+                            	"onclick": null,
+                            	"showDuration": "300",
+                            	"hideDuration": "1000",
+                            	"timeOut": "5000",
+                            	"extendedTimeOut": "1000",
+                            	"showEasing": "swing",
+                            	"hideEasing": "linear",
+                            	"showMethod": "fadeIn",
+                            	"hideMethod": "fadeOut"
+                        			}
+                    		}
+                	},
+                	error: function (err) {
+                    	// let formError = err.responseJSON.errors;
+                    	// console.log(formError)
+                    	// for (let error in formError) {
+                    	//     console.log(error)
+                    	//     $('.' + error + '_err').html(formError[error][0]);
+                    	// }
+                			}
+            			});
+        		});
+
+	});
+
+
+	||||  in web.php
+
+	Route::post('/update-cat', [UpdateCategoryController::class, 'updateCat'])->name('update.cat');
+
+
+	|||| in controller file
+
+    	public function updateCat(Request $request){
+
+        		AddCategory::where('id', $request->up_id)->update([
+            		'catname' => $request->catname
+        	]);
+
+    }
+
+Maximum execution time of 60 seconds exceeded
+
+
+1. toastr
+2. error
+
+
+
+
+    $request->validate([
+        // 'pname'=>'required',
+        // 'cat_id'=>'required',
+        // 'subcat_id'=>'required',
+        // 'tags'=>'required',
+        // 'exchange'=>'required',
+        // 'refund'=>'required',
+        // 'pimage'=>'required',
+        // 'ptumbnail'=>'required',
+        // 'pvideo'=>'required',
+        // 'shipweight'=>'required',
+        // 'price'=>'required',
+        // 'stock'=>'required',
+        // 'quantity'=>'required',
+        // 'pagetitle'=>'required',
+        // 'metadesc'=>'required',
+        // 'meta_url'=>'required',
+
+        // 'pimage.*' => 'mimes:jpg,png,jpeg,gif,svg'
+        ]);
+
+
+$product=new Product();
+    $product->pname=$request->pname;
+    $product->cat_id=$request->cat_id;
+    $product->subcat_id=$request->subcat_id;
+    $product->tags=$request->tags;
+    $product->exchange=$request->exchange;
+    $product->refund=$request->refund;
+    $product->pimage=$request->pimage;
+    $product->ptumbnail=$request->ptumbnail;
+    $product->pvideo=$request->pvideo;
+    $product->shipweight=$request->shipweight;
+    $product->price=$request->price;
+    $product->stock=$request->stock;
+    $product->quantity=$request->quantity;
+    $product->pagetitle=$request->pagetitle;
+    $product->metadesc=$request->metadesc;
+    $product->meta_url=$request->meta_url;

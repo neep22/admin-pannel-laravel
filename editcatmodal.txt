@@ -1,0 +1,70 @@
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button> -->
+
+<!-- Modal -->
+<div class="modal fade" id="editCatModal" tabindex="-1" aria-labelledby="editCatModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editCatModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+
+        <!-- New Product Add Start -->
+        <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <<div class="row load">
+                                <div class="col-sm-8 m-auto">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="card-header-2">
+                                                <h5>Category Information</h5>
+                                            </div>
+
+                                            <!-- <form action="" method="post" class="theme-form theme-form-2 mega-form" id="addparentcat">
+                                                @csrf
+
+                                                <input type="text" id="upcat_id">
+
+                                                <div class="mb-4 row align-items-center">
+                                                    <label class="form-label-title col-sm-3 mb-2" style="width: 100%">Category Name</label>
+                                                    <div class="col-sm-9" style="width: 100%">
+                                                        <input class="form-control" name="catname" id="catname" type="text"
+                                                            placeholder="Category Name">
+                                                        <span class="text-danger catname_err"></span>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary update_category">Save</button>
+                                            </form> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- New Product Add End -->
+                @include('Admin.Category.category_js')
+                @include('Admin.Category.subcategory_js')
+                {!! Toastr::message() !!}
+        </div>
+        <!-- Page Body End -->
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

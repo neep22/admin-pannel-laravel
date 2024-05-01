@@ -1,0 +1,68 @@
+1. in js
+
+	-->>         //update quantity
+
+        		$(document).on('click', '.add_quantity', function () {
+            			// Find the closest input field within the same parent div
+            			let inputField = $(this).closest('.qty-box').find('.qty-input');
+
+            			// Get the current value of the input field
+            			let currentValue = inputField.val();
+
+            			// Get the product ID
+            			let product_id = $(this).data('product_id');
+
+            			console.log(inputField);
+            			console.log(currentValue);
+            			console.log(product_id);
+            			$.ajax({
+                			url: "{{route('update.quantity')}}",
+                			type: "POST",
+                			data: { 
+                    			_token: @json(csrf_token()),
+                    			quantity:currentValue,
+                    			product_id:product_id
+                			},
+                			headers: {
+                				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                			},
+                		success: function (response) {
+                    			// console.log(response); // Log the response for debugging
+                			},
+                			error: function (error) {
+                    				// console.error("Error updating quantity: ", error);
+                			}
+            			});
+        		});
+
+2. blade file
+
+	-->> <div class="cart_qty qty-box">
+                            <div class="input-group">
+                                      <button type="button" class="qty-left-minus add_quantity" data-product_id="{{$product->id}}"
+                                                                         data-field="">
+                                                 <i class="fa fa-minus" aria-hidden="true"></i>
+                                       </button>
+                                       <input class="form-control input-number qty-input"
+                                                                        type="text" name="quantity" id="quantity" value="1">
+                                        <button type="button" class="qty-right-plus add_quantity" data-product_id="{{$product->id}}"
+                                                                         data-field="">
+                                                  <i class="fa fa-plus" aria-hidden="true"></i>
+                                         </button>
+                               </div>
+                        </div>
+
+3. controller 
+
+	-->>     function updateQuantity(Request $request){
+
+        		Order::where('product_id',$request->product_id)->update([
+
+            		'quantity'=>$request->quantity
+        		]);
+
+    	}
+
+4. web.php
+
+	-->> Route::post('/quantity-update',[UserOrderController::class,'updateQuantity'])->name('update.quantity');

@@ -1,0 +1,20 @@
+1. two parameter pass in controller using url/route in blade file.
+
+	-->> in blade file 
+		
+		<a href="{{route('product.details', ['productId' => $product->id, 'categoryId' => $product->cat_id])}}">
+                                       <i data-feather="eye"></i>
+                       	</a>
+
+	-->> in web.php
+
+		Route::get("/product-details/{productId}/{categoryId}",[SiteController::class,"getSingleproduct"])->name('product.details');
+
+	-->> in controller file
+
+		function getSingleproduct(Request $request, $productId, $categoryId){
+
+        			$getSingleProduct = Product::where('id',$productId)->get();
+
+        			return view("user.product_left_thumbnail",['getSingleProduct'=>$getSingleProduct, 'categoryId'=>$categoryId]);
+    		}

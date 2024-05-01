@@ -1,0 +1,27 @@
+1. create a route
+	//\\ web.php
+
+		Route::get('/pagination/paginate-data', [SearchProductController::class, 'pagination']);
+
+
+.2.  in controller file
+		    public function pagination(){
+        			$getProduct = Product::latest()->paginate(5); 
+        			return view ("Admin.Product.paginateProduct", ["getProduct"=>$getProduct])->render();
+    	
+				}
+2. in blade file  
+
+	//\\  paginateProduct.blade.php
+	
+		{{ $getProduct->links() }} //$getProduct  is a variable which is a key in controller file.
+
+
+3. in App>Providers>AppServiceProvider
+
+	//\\	use Illuminate\Pagination\Paginator;
+
+	//\\	    public function register(): void
+    		{
+        			Paginator::useBootstrap();
+    		}
